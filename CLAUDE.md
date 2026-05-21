@@ -30,7 +30,7 @@
 ### 배포 패키지 업데이트
 - `skin_data/` 파일 수정 후 zip을 다시 생성해야 할 때:
   ```bash
-  cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml images/ preview256.jpg && cd ..
+  rm -f gap-tistory-skin.zip && cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml preview256.jpg && cd ..
   ```
 
 ### PR & 릴리스 워크플로
@@ -62,6 +62,6 @@
    gh release delete <tag> --yes
    git tag -d <tag> && git push origin :refs/tags/<tag>
    git tag <tag> && git push origin <tag>
-   cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml images/ preview256.jpg && cd ..
+   rm -f gap-tistory-skin.zip && cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml preview256.jpg && cd ..
    gh release create <tag> gap-tistory-skin.zip --title "..." --notes "..."
    ```
