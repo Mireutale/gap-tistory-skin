@@ -9,7 +9,6 @@ Lovable 영감의 크림/차콜 팔레트 기반 에디토리얼 티스토리 �
 - 모바일 320px ~ 데스크톱 1440px 반응형
 
 ## 설치 방법
-
 1. 프로젝트 루트에서 zip을 생성합니다:
    ```bash
    cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml preview.jpg preview256.jpg images/ && cd ..
