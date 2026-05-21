@@ -10,11 +10,29 @@ Lovable 영감의 크림/차콜 팔레트 기반 에디토리얼 티스토리 �
 - 모바일 320px ~ 데스크톱 1440px 반응형
 
 ## 설치 방법
+
+### zip 파일 구성
+
+[티스토리 스킨 제작 가이드](https://tistory.github.io/document-tistory-skin/)에 따른 파일 구조:
+
+| 파일 | 필수 여부 | 설명 |
+|------|-----------|------|
+| `skin.html` | **필수** | 스킨 메인 템플릿 |
+| `style.css` | **필수** | 스킨 스타일시트 |
+| `index.xml` | **필수** | 스킨 정보 파일 |
+| `images/` | 선택 | 이미지, 스크립트 등 추가 리소스 |
+| `preview.gif` | 선택 | 썸네일 미리보기 (112×84) |
+| `preview256.jpg` | 선택 | 미리보기 (256×192) |
+| `preview560.jpg` | 선택 | 미리보기 (560×420) |
+| `preview1600.jpg` | 선택 | 미리보기 (1600×1200) |
+
+### zip 생성 및 업로드
+
 1. 프로젝트 루트에서 zip을 생성합니다:
    ```bash
-   cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml preview.jpg preview256.jpg images/ && cd ..
+   cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml images/ preview256.jpg && cd ..
    ```
-2. 티스토리 관리자 → **꾸미기 → 스킨 → 스킨 등록** 에서 zip 파일 업로드
+2. 티스토리 관리자 → **꾸미기 → 스킨 편집 → 스킨 업로드** 에서 zip 파일 업로드
 3. 스킨을 선택하고 **적용**
 
 ## 사용자 설정 변수
