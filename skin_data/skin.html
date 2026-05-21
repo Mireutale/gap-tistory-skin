@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
-  onload="renderMathInElement(document.querySelector('.article-body'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+  onload="(function(){var e=document.querySelector('.article-body');if(e)renderMathInElement(e,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})})()"></script>
 </head>
 <body>
 
@@ -87,7 +87,9 @@
 <article class="post-item">
   <div class="post-item-body">
     <s_index_article_rep_category>
+    <s_if_var_show_category_in_list>
     <a href="[##_index_article_rep_category_link_##]" class="post-category">[##_index_article_rep_category_##]</a>
+    </s_if_var_show_category_in_list>
     </s_index_article_rep_category>
     <h2 class="post-title">
       <a href="[##_index_article_rep_link_##]">[##_index_article_rep_title_##]</a>
@@ -101,11 +103,13 @@
     </div>
   </div>
   <s_index_article_rep_thumbnail>
+  <s_if_var_show_thumbnails>
   <div class="post-thumb">
     <a href="[##_index_article_rep_link_##]" tabindex="-1" aria-hidden="true">
       [##_index_article_rep_thumbnail_##]
     </a>
   </div>
+  </s_if_var_show_thumbnails>
   </s_index_article_rep_thumbnail>
 </article>
 </s_index_article_rep>
@@ -367,6 +371,11 @@
 
   document.querySelectorAll('pre code').forEach(function(el) {
     hljs.highlightElement(el);
+  });
+
+  document.querySelectorAll('.comment-avatar').forEach(function(el) {
+    var t = (el.textContent || '').trim();
+    el.textContent = t ? t.charAt(0).toUpperCase() : '?';
   });
 
   applyTheme(getTheme());
