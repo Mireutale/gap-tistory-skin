@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skin>
+  <information>
+    <name>Gap</name>
+    <version>1.0.0</version>
+    <description>크림/차콜 팔레트 기반 에디토리얼 티스토리 스킨. Pretendard Variable 폰트, 라이트/다크 테마, highlight.js 코드 블록 지원.</description>
+    <license>MIT</license>
+    <author homepage="">mireutale</author>
+  </information>
+  <default>
+    <writer></writer>
+    <comment></comment>
+    <trackback></trackback>
+    <searchEntry></searchEntry>
+    <paging>
+      <visible>true</visible>
+      <newer>이전</newer>
+      <older>다음</older>
+    </paging>
+  </default>
+  <variablegroup>
+    <variable>
+      <name>theme_mode</name>
+      <label>테마 모드</label>
+      <type>select</type>
+      <default>auto</default>
+      <options>
+        <option><value>auto</value><label>시스템 자동</label></option>
+        <option><value>light</value><label>라이트</label></option>
+        <option><value>dark</value><label>다크</label></option>
+      </options>
+    </variable>
+    <variable>
+      <name>show_thumbnails</name>
+      <label>글 목록 썸네일 표시</label>
+      <type>checkbox</type>
+      <default>true</default>
+    </variable>
+    <variable>
+      <name>show_category_in_list</name>
+      <label>목록에서 카테고리 표시</label>
+      <type>checkbox</type>
+      <default>true</default>
+    </variable>
+    <variable>
+      <name>footer_text</name>
+      <label>푸터 문구</label>
+      <type>text</type>
+      <default>© [##_title_##]. All rights reserved.</default>
+    </variable>
+  </variablegroup>
+</skin>

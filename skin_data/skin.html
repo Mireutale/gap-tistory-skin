@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[##_title_##]</title>
+<script>
+(function(){
+  var t=localStorage.getItem('gap-theme')||'[##_var_theme_mode_##]';
+  var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if(t==='dark'||(t==='auto'&&mq))document.documentElement.dataset.theme='dark';
+  else if(t==='light')document.documentElement.dataset.theme='light';
+})();
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" href="./style.css">
+<link rel="alternate" type="application/rss+xml" title="[##_title_##]" href="[##_rss_url_##]">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="[##_blog_link_##]" class="site-logo">[##_title_##]</a>
+
+    <input type="checkbox" id="nav-toggle" class="nav-toggle-input" aria-hidden="true">
+
+    <nav class="site-nav" aria-label="주 탐색">
+      <ul class="nav-list">
+        [##_category_list_##]
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="search-toggle" aria-label="검색" type="button">
+        <img src="./images/icons/search.svg" alt="" width="18" height="18">
+      </button>
+      <button class="icon-btn" id="theme-toggle" aria-label="테마 전환" type="button">
+        <img src="./images/icons/sun.svg" class="theme-icon-light" alt="" width="18" height="18">
+        <img src="./images/icons/moon.svg" class="theme-icon-dark" alt="" width="18" height="18">
+        <span class="theme-icon-auto">Auto</span>
+      </button>
+      <label for="nav-toggle" class="nav-toggle-label icon-btn" aria-label="메뉴 열기">
+        <img src="./images/icons/menu.svg" alt="" width="20" height="20">
+      </label>
+    </div>
+  </div>
+
+  <div class="search-overlay" id="search-overlay">
+    <div class="container">
+      <form action="[##_search_url_##]" method="get" class="search-form">
+        <input type="text" name="q" placeholder="검색어를 입력하세요" class="search-input" autocomplete="off">
+        <button type="submit" class="btn-dark" aria-label="검색">
+          <img src="./images/icons/search.svg" alt="" width="16" height="16">
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<main class="site-main">
+<div class="container">
+
+<!-- 컨텍스트 헤딩 (카테고리·태그·검색 진입 시) -->
+<s_local_desc>
+<div class="context-heading">
+  <h1 class="context-title">[##_local_desc_##]</h1>
+</div>
+</s_local_desc>
+
+<!-- 검색 결과 헤더 -->
+<s_search>
+<div class="context-heading">
+  <h1 class="context-title">"[##_search_text_##]" 검색 결과</h1>
+</div>
+</s_search>
+
+<!-- ===== 글 목록 ===== -->
+<s_index>
+<div class="post-list">
+
+<s_index_article_rep>
+<article class="post-item">
+  <div class="post-item-body">
+    <s_index_article_rep_category>
+    <a href="[##_index_article_rep_category_link_##]" class="post-category">[##_index_article_rep_category_##]</a>
+    </s_index_article_rep_category>
+    <h2 class="post-title">
+      <a href="[##_index_article_rep_link_##]">[##_index_article_rep_title_##]</a>
+    </h2>
+    <p class="post-summary">[##_index_article_rep_summary_##]</p>
+    <div class="post-meta">
+      <time class="post-date">[##_index_article_rep_date_##]</time>
+      <s_index_article_rep_rp>
+      <span class="post-comment-cnt">댓글 [##_index_article_rep_rp_cnt_##]</span>
+      </s_index_article_rep_rp>
+    </div>
+  </div>
+  <s_index_article_rep_thumbnail>
+  <div class="post-thumb">
+    <a href="[##_index_article_rep_link_##]" tabindex="-1" aria-hidden="true">
+      [##_index_article_rep_thumbnail_##]
+    </a>
+  </div>
+  </s_index_article_rep_thumbnail>
+</article>
+</s_index_article_rep>
+
+</div>
+
+<s_paging>
+<nav class="pagination" aria-label="페이지 탐색">
+  [##_paging_##]
+</nav>
+</s_paging>
+
+</s_index>
+
+<!-- ===== 글 상세 ===== -->
+<s_article_rep>
+<article class="article" itemscope itemtype="https://schema.org/BlogPosting">
+  <header class="article-header">
+    <s_article_rep_category>
+    <a href="[##_article_rep_category_link_##]" class="post-category">[##_article_rep_category_##]</a>
+    </s_article_rep_category>
+    <h1 class="article-title" itemprop="name">[##_article_rep_title_##]</h1>
+    <div class="article-meta">
+      <time class="post-date" itemprop="datePublished">[##_article_rep_date_##]</time>
+      <span class="article-views">조회 [##_article_rep_visit_##]</span>
+      <span class="article-comments">댓글 [##_article_rep_rp_cnt_##]</span>
+    </div>
+  </header>
+
+  <div class="article-body" itemprop="articleBody">
+    [##_article_rep_desc_##]
+  </div>
+
+  <s_article_rep_tag>
+  <div class="article-tags">
+    [##_article_rep_tags_##]
+  </div>
+  </s_article_rep_tag>
+
+  <nav class="article-nav" aria-label="이전/다음 글">
+    <s_article_rep_prev>
+    <a href="[##_article_rep_prev_link_##]" class="article-nav-item article-nav-prev">
+      <span class="nav-label">이전 글</span>
+      <span class="nav-title">[##_article_rep_prev_title_##]</span>
+    </a>
+    </s_article_rep_prev>
+    <s_article_rep_next>
+    <a href="[##_article_rep_next_link_##]" class="article-nav-item article-nav-next">
+      <span class="nav-label">다음 글</span>
+      <span class="nav-title">[##_article_rep_next_title_##]</span>
+    </a>
+    </s_article_rep_next>
+  </nav>
+</article>
+
+<!-- 댓글 -->
+<s_rp_container>
+<section class="comments" id="comments">
+  <h2 class="comments-heading">댓글 <span>[##_rp_count_##]</span></h2>
+
+  <s_rp_rep>
+  <div class="comment-list">
+    <s_rp_rep_item>
+    <article class="comment-item" id="comment-[##_rp_rep_id_##]">
+      <div class="comment-header">
+        <div class="comment-avatar" aria-hidden="true">[##_rp_rep_name_##]</div>
+        <div class="comment-info">
+          <strong class="comment-author">[##_rp_rep_name_##]</strong>
+          <time class="comment-date">[##_rp_rep_date_##]</time>
+        </div>
+        <s_rp_rep_delete>
+        <a href="[##_rp_rep_delete_##]" class="comment-delete">삭제</a>
+        </s_rp_rep_delete>
+      </div>
+      <div class="comment-body">[##_rp_rep_desc_##]</div>
+      <s_rp_rep_sub>
+      <div class="comment-replies">
+        <s_rp_rep_sub_item>
+        <article class="comment-item comment-reply">
+          <div class="comment-header">
+            <div class="comment-avatar" aria-hidden="true">[##_rp_rep_sub_name_##]</div>
+            <div class="comment-info">
+              <strong class="comment-author">[##_rp_rep_sub_name_##]</strong>
+              <time class="comment-date">[##_rp_rep_sub_date_##]</time>
+            </div>
+            <s_rp_rep_sub_delete>
+            <a href="[##_rp_rep_sub_delete_##]" class="comment-delete">삭제</a>
+            </s_rp_rep_sub_delete>
+          </div>
+          <div class="comment-body">[##_rp_rep_sub_desc_##]</div>
+        </article>
+        </s_rp_rep_sub_item>
+      </div>
+      </s_rp_rep_sub>
+    </article>
+    </s_rp_rep_item>
+  </div>
+  </s_rp_rep>
+
+  <s_rp_input_form>
+  <div class="comment-form-wrap">
+    <h3 class="comment-form-title">댓글 작성</h3>
+    [##_rp_input_form_##]
+  </div>
+  </s_rp_input_form>
+</section>
+</s_rp_container>
+
+</s_article_rep>
+
+<!-- ===== 보호글 ===== -->
+<s_article_protected>
+<div class="protected-post">
+  <p class="protected-msg">비밀글입니다. 비밀번호를 입력해 주세요.</p>
+  [##_article_protected_##]
+</div>
+</s_article_protected>
+
+<!-- ===== 공지 ===== -->
+<s_notice>
+<div class="notice-list">
+  <s_notice_rep>
+  <article class="notice-item">
+    <h2 class="notice-title">
+      <a href="[##_notice_rep_link_##]">[##_notice_rep_title_##]</a>
+    </h2>
+    <div class="post-meta">
+      <time class="post-date">[##_notice_rep_date_##]</time>
+    </div>
+    <div class="notice-body">[##_notice_rep_desc_##]</div>
+  </article>
+  </s_notice_rep>
+</div>
+</s_notice>
+
+<!-- ===== 방명록 ===== -->
+<s_guest>
+<section class="guestbook">
+  <h1 class="context-title">방명록</h1>
+
+  <s_guest_input_form>
+  <div class="comment-form-wrap">
+    [##_guest_input_form_##]
+  </div>
+  </s_guest_input_form>
+
+  <s_guest_rep>
+  <div class="comment-list">
+    <s_guest_rep_item>
+    <article class="comment-item">
+      <div class="comment-header">
+        <div class="comment-avatar" aria-hidden="true">[##_guest_rep_name_##]</div>
+        <div class="comment-info">
+          <strong class="comment-author">[##_guest_rep_name_##]</strong>
+          <time class="comment-date">[##_guest_rep_date_##]</time>
+        </div>
+        <s_guest_rep_delete>
+        <a href="[##_guest_rep_delete_##]" class="comment-delete">삭제</a>
+        </s_guest_rep_delete>
+      </div>
+      <div class="comment-body">[##_guest_rep_desc_##]</div>
+    </article>
+    </s_guest_rep_item>
+  </div>
+  </s_guest_rep>
+
+  <s_paging>
+  <nav class="pagination" aria-label="방명록 페이지">
+    [##_paging_##]
+  </nav>
+  </s_paging>
+</section>
+</s_guest>
+
+<!-- ===== 태그 ===== -->
+<s_tag>
+<div class="tag-page">
+  <h1 class="context-title">태그</h1>
+  <s_tag_list>
+  <ul class="tag-cloud">
+    <s_tag_list_item>
+    <li><a href="[##_tag_link_##]" class="tag-chip">[##_tag_name_##]</a></li>
+    </s_tag_list_item>
+  </ul>
+  </s_tag_list>
+</div>
+</s_tag>
+
+<!-- ===== 소개 ===== -->
+<s_t_about>
+<div class="about-page article-body">
+  [##_t_about_##]
+</div>
+</s_t_about>
+
+</div><!-- /.container -->
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p class="footer-copy">[##_var_footer_text_##]</p>
+    <a href="[##_rss_url_##]" class="footer-rss" aria-label="RSS 피드">
+      <img src="./images/icons/rss.svg" alt="RSS" width="16" height="16">
+    </a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(function(){
+  var STORAGE_KEY = 'gap-theme';
+  var root = document.documentElement;
+
+  function getTheme() { return localStorage.getItem(STORAGE_KEY) || '[##_var_theme_mode_##]'; }
+
+  function applyTheme(t) {
+    var dark = t === 'dark' || (t === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (dark) root.dataset.theme = 'dark';
+    else if (t === 'light') root.dataset.theme = 'light';
+    else delete root.dataset.theme;
+    updateHljsTheme(dark);
+  }
+
+  function updateHljsTheme(isDark) {
+    var el = document.getElementById('hljs-theme');
+    if (!el) return;
+    el.href = isDark
+      ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css'
+      : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+  }
+
+  function updateBtn(t) {
+    var btn = document.getElementById('theme-toggle');
+    if (btn) btn.dataset.mode = t;
+  }
+
+  var _origApply = applyTheme;
+  applyTheme = function(t) { _origApply(t); updateBtn(t); };
+
+  var btn = document.getElementById('theme-toggle');
+  if (btn) btn.addEventListener('click', function() {
+    var cur = getTheme();
+    var next = cur === 'light' ? 'dark' : cur === 'dark' ? 'auto' : 'light';
+    localStorage.setItem(STORAGE_KEY, next);
+    applyTheme(next);
+  });
+
+  var searchBtn = document.getElementById('search-toggle');
+  var searchOverlay = document.getElementById('search-overlay');
+  if (searchBtn && searchOverlay) {
+    searchBtn.addEventListener('click', function() {
+      var open = searchOverlay.classList.toggle('is-open');
+      if (open) searchOverlay.querySelector('.search-input').focus();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') searchOverlay.classList.remove('is-open');
+    });
+  }
+
+  document.querySelectorAll('pre code').forEach(function(el) {
+    hljs.highlightElement(el);
+  });
+
+  applyTheme(getTheme());
+})();
+</script>
+</body>
+</html>
