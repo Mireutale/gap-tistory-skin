@@ -40,13 +40,17 @@ Lovable 영감의 크림/차콜 팔레트 기반 에디토리얼 티스토리 �
 
 ## 버전 히스토리
 
-### v1.3.0
+<details open>
+<summary>v1.3.0</summary>
 
 - 티스토리 공식 `index.xml` 구조에 맞게 제작자 메타데이터 수정
 - 제작자 이름, GitHub 홈페이지, 이메일이 스킨 정보에 표시되도록 구성
 - `dev` 브랜치 기반 작업/PR 워크플로 도입
 
-### v1.2.0
+</details>
+
+<details>
+<summary>v1.2.0</summary>
 
 - 목록/상세 분기를 dev-roo 방식의 `s_article_rep` 기반 구조로 정리
 - 글 목록 하단 페이지 이동을 `prev_page`, `s_paging_rep`, `next_page` 치환자로 직접 구성
@@ -56,7 +60,10 @@ Lovable 영감의 크림/차콜 팔레트 기반 에디토리얼 티스토리 �
 - 긴 카테고리명은 말줄임 처리
 - 스킨 제작자 정보에 `mireutale` GitHub 링크 추가
 
-### v1.1.0
+</details>
+
+<details>
+<summary>v1.1.0</summary>
 
 - 메인 화면을 본문 전체 출력 대신 주요 글 목록 형태로 구성
 - 글 목록에서 제목, 카테고리, 요약, 날짜, 댓글 수, 썸네일을 표시
@@ -65,13 +72,18 @@ Lovable 영감의 크림/차콜 팔레트 기반 에디토리얼 티스토리 �
 - 빈 검색어 진입 시 `"" 검색 결과` 헤더가 남지 않도록 처리
 - 로컬 확인용 `skin_data/demo.html` 추가 및 Git 추적 제외
 
-### v1.0.0
+</details>
+
+<details>
+<summary>v1.0.0</summary>
 
 - 크림/차콜 팔레트 기반 초기 티스토리 스킨 구성
 - 라이트/다크/시스템 자동 테마 지원
 - Pretendard Variable, highlight.js, KaTeX 적용
 - 글 상세, 카테고리, 검색, 방명록, 공지, 태그, 소개 페이지 기본 지원
 - 모바일과 데스크톱 반응형 레이아웃 구성
+
+</details>
 
 ## 라이선스
 
