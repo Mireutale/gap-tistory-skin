@@ -70,47 +70,45 @@
 </div>
 </s_search>
 
-<!-- ===== 글 목록 ===== -->
-<s_list>
+<!-- ===== 글 목록 / 상세 ===== -->
+<s_index>
 <div class="main-list-heading">
   <h1 class="context-title">[##_list_conform_##]</h1>
 </div>
 <div class="post-list">
+</s_index>
 
-<s_list_rep>
+<s_article_rep>
+<s_index_article_rep>
 <article class="post-item">
   <div class="post-item-body">
-    <a href="[##_list_rep_category_link_##]" class="post-category">[##_list_rep_category_##]</a>
+    <s_article_rep_category>
+    <a href="[##_article_rep_category_link_##]" class="post-category">[##_article_rep_category_##]</a>
+    </s_article_rep_category>
     <h2 class="post-title">
-      <a href="[##_list_rep_link_##]">[##_list_rep_title_##]</a>
+      <a href="[##_article_rep_link_##]">[##_article_rep_title_##]</a>
     </h2>
-    <p class="post-summary">[##_list_rep_summary_##]</p>
+    <div class="post-summary">
+      [##_article_rep_desc_##]
+    </div>
     <div class="post-meta">
-      <time class="post-date">[##_list_rep_regdate_##]</time>
-      <span class="post-comment-cnt">댓글 [##_list_rep_rp_cnt_##]</span>
+      <time class="post-date">[##_article_rep_simple_date_##]</time>
+      <span class="post-comment-cnt">댓글 [##_article_rep_rp_cnt_##]</span>
     </div>
   </div>
-  <s_list_rep_thumbnail>
+  <s_article_rep_thumbnail>
   <s_if_var_show_thumbnails>
   <div class="post-thumb">
-    <a href="[##_list_rep_link_##]" tabindex="-1" aria-hidden="true">
-      [##_list_rep_thumbnail_##]
+    <a href="[##_article_rep_link_##]" tabindex="-1" aria-hidden="true">
+      <img src="//i1.daumcdn.net/thumb/C240x160/?fname=[##_article_rep_thumbnail_raw_url_##]" alt="">
     </a>
   </div>
   </s_if_var_show_thumbnails>
-  </s_list_rep_thumbnail>
+  </s_article_rep_thumbnail>
 </article>
-</s_list_rep>
-
-<s_list_empty>
-<p class="empty-list">표시할 글이 없습니다.</p>
-</s_list_empty>
-
-</div>
-</s_list>
+</s_index_article_rep>
 
 <!-- ===== 글 상세 ===== -->
-<s_article_rep>
 <s_permalink_article_rep>
 <article class="article" itemscope itemtype="https://schema.org/BlogPosting">
   <header class="article-header">
@@ -207,9 +205,23 @@
 </s_permalink_article_rep>
 </s_article_rep>
 
+<s_index>
+</div>
+</s_index>
+
+<s_list>
+<s_list_empty>
+<p class="empty-list">표시할 글이 없습니다.</p>
+</s_list_empty>
+</s_list>
+
 <s_paging>
-<nav class="pagination" aria-label="페이지 탐색">
-  [##_paging_##]
+<nav class="pagination list-pagination" aria-label="글 목록 페이지 탐색">
+  <a [##_prev_page_##] class="pagination-arrow [##_no_more_prev_##]" aria-label="이전 페이지">이전</a>
+  <s_paging_rep>
+  <a [##_paging_rep_link_##] class="pagination-num">[##_paging_rep_link_num_##]</a>
+  </s_paging_rep>
+  <a [##_next_page_##] class="pagination-arrow [##_no_more_next_##]" aria-label="다음 페이지">다음</a>
 </nav>
 </s_paging>
 
@@ -407,16 +419,77 @@
     el.textContent = t ? t.charAt(0).toUpperCase() : '?';
   });
 
-  document.querySelectorAll('.post-summary').forEach(function(el) {
-    var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
-    el.textContent = text;
-  });
-
   document.querySelectorAll('.context-heading').forEach(function(el) {
     var title = el.querySelector('.context-title');
     var text = title ? title.textContent.trim() : '';
     if (!text || text === '"" 검색 결과') el.remove();
   });
+
+  document.querySelectorAll('.list-pagination').forEach(function(el) {
+    var hasControls = el.querySelector('a[href], strong');
+    if (!hasControls) el.remove();
+    el.querySelectorAll('a').forEach(function(link) {
+      if (!link.getAttribute('href')) link.setAttribute('href', '#');
+    });
+  });
+
+  function setupCategoryToggles() {
+    var nav = document.querySelector('.nav-list');
+    if (!nav) return;
+
+    function normalizeLink(link) {
+      if (link.querySelector(':scope > .category-name')) return;
+
+      var text = '';
+      Array.prototype.slice.call(link.childNodes).forEach(function(node) {
+        if (node.nodeType === Node.TEXT_NODE) text += node.textContent;
+      });
+
+      text = text.replace(/\s+/g, ' ').trim();
+      if (!text) return;
+
+      Array.prototype.slice.call(link.childNodes).forEach(function(node) {
+        if (node.nodeType === Node.TEXT_NODE) link.removeChild(node);
+      });
+
+      var name = document.createElement('span');
+      name.className = 'category-name';
+      name.textContent = text;
+      link.insertBefore(name, link.firstChild);
+    }
+
+    var rootLink = nav.querySelector('.link_tit');
+    if (rootLink) rootLink.setAttribute('aria-hidden', 'true');
+
+    nav.querySelectorAll('a').forEach(normalizeLink);
+
+    nav.querySelectorAll('.category_list > li').forEach(function(item) {
+      var link = item.querySelector(':scope > a');
+      var subList = item.querySelector(':scope > .sub_category_list');
+      if (!link || !subList || item.querySelector(':scope > .category-row')) return;
+
+      item.classList.add('has-children');
+      var isSelected = item.classList.contains('selected') || !!item.querySelector('.selected');
+      if (isSelected) item.classList.add('is-open');
+
+      var row = document.createElement('div');
+      row.className = 'category-row';
+      item.insertBefore(row, link);
+
+      var btn = document.createElement('button');
+      btn.className = 'category-toggle';
+      btn.type = 'button';
+      btn.setAttribute('aria-label', link.textContent.replace(/\s+/g, ' ').trim() + ' 하위 분류 보기');
+      btn.setAttribute('aria-expanded', String(item.classList.contains('is-open')));
+      row.appendChild(btn);
+      row.appendChild(link);
+
+      btn.addEventListener('click', function() {
+        var open = item.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+    });
+  }
 
   function updateDateTime() {
     var el = document.getElementById('current-datetime');
@@ -445,6 +518,7 @@
   }
 
   updateDateTime();
+  setupCategoryToggles();
   setInterval(updateDateTime, 1000);
   applyTheme(getTheme());
 })();
