@@ -35,36 +35,51 @@
 
 ### PR & 릴리스 워크플로
 
-변경 사항을 main에 반영할 때 아래 순서를 따른다:
+기본 브랜치는 `main`과 `dev`만 유지한다. 모든 작업은 `dev`에서 분기한 작업 브랜치에서 진행하고, `main`에는 사용자의 명시적인 허락을 받은 뒤에만 `dev`를 반영한다.
 
-1. **새 브랜치 생성** — 작업 단위에 맞는 브랜치명 사용
+1. **dev 최신화**
+   ```bash
+   git checkout dev
+   git fetch origin
+   git pull --ff-only origin dev
+   ```
+2. **작업 브랜치 생성** — 작업 단위에 맞는 브랜치명 사용
    ```bash
    git checkout -b <type>/<description>
    ```
-2. **커밋** — Conventional Commits 형식 (`feat:`, `fix:`, `docs:` 등)
+3. **커밋** — Conventional Commits 형식 (`feat:`, `fix:`, `docs:` 등)
    ```bash
    git add <files> && git commit -m "<type>: <description>"
    ```
-3. **PR 생성** — main을 base로, CI 통과 전까지 merge 금지
+4. **dev 대상 PR 생성** — `main`이 아니라 `dev`를 base로 둔다
    ```bash
-   gh pr create --base main --title "..." --body "..."
+   gh pr create --base dev --title "..." --body "..."
    ```
-4. **CI 해결** — lint.yml 등 실패한 워크플로 수정 후 재푸시
+5. **CI 해결** — lint.yml 등 실패한 워크플로 수정 후 재푸시
    ```bash
    gh pr checks <PR번호> --watch
    ```
-5. **main 병합** — CI 전체 통과 후 squash merge
+6. **dev 병합** — CI 전체 통과 후 squash merge
    ```bash
    gh pr merge <PR번호> --squash --delete-branch
    ```
-6. **릴리스 재생성** — 기존 릴리스 삭제 후 최신 태그로 재생성 (zip 에셋 첨부)
+7. **main 반영 승인 요청** — `dev`를 `main`에 올리기 전 반드시 사용자에게 허락을 받는다. 허락 없이 `main` 대상 PR 생성, merge, release를 진행하지 않는다.
+8. **승인 후 main 대상 PR 생성**
    ```bash
-   gh release delete <tag> --yes
-   git tag -d <tag> && git push origin :refs/tags/<tag>
-   git tag <tag> && git push origin <tag>
-   rm -f gap-tistory-skin.zip && cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml preview256.jpg && cd ..
-   gh release create <tag> gap-tistory-skin.zip --title "..." --notes "..."
+   gh pr create --base main --head dev --title "..." --body "..."
    ```
+9. **승인 후 main 병합** — CI 전체 통과 후 squash merge
+   ```bash
+   gh pr merge <PR번호> --squash
+   ```
+10. **릴리스 재생성 또는 생성** — main 반영 후에만 실행한다
+    ```bash
+    gh release delete <tag> --yes
+    git tag -d <tag> && git push origin :refs/tags/<tag>
+    git tag <tag> && git push origin <tag>
+    rm -f gap-tistory-skin.zip && cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml preview256.jpg && cd ..
+    gh release create <tag> gap-tistory-skin.zip --title "..." --notes "..."
+    ```
 
 ## 공통 행동 지침
 
