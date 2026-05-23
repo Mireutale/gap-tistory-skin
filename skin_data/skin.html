@@ -25,6 +25,9 @@
 
 <header class="site-header">
   <div class="container header-inner">
+    <button class="icon-btn" id="folder-toggle" aria-label="카테고리 열기" aria-controls="folder-drawer" aria-expanded="false" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+    </button>
     <a href="[##_blog_link_##]" class="site-logo">[##_title_##]</a>
 
     <div class="header-actions">
@@ -54,6 +57,29 @@
 <main class="site-main">
 <div class="container">
 <div class="page-layout">
+<aside class="folder-drawer" id="folder-drawer" aria-label="카테고리 패널">
+  <div class="folder-drawer-header">
+    <h2 class="folder-drawer-title">카테고리</h2>
+  </div>
+  <section class="folder-section">
+    <h3 class="folder-section-title">카테고리와 글</h3>
+    <nav class="folder-nav" aria-label="카테고리">
+      <div class="nav-list">
+        [##_category_list_##]
+      </div>
+    </nav>
+    <ul class="folder-post-source" data-folder-posts>
+      <s_rctps_rep>
+      <li class="folder-post-item">
+        <span class="folder-post-category">[##_rctps_rep_category_##]</span>
+        <a href="[##_rctps_rep_link_##]" class="folder-post-link">[##_rctps_rep_title_##]</a>
+        <time class="folder-post-date">[##_rctps_rep_simple_date_##]</time>
+      </li>
+      </s_rctps_rep>
+    </ul>
+  </section>
+</aside>
+<div class="drawer-backdrop" id="folder-backdrop" hidden></div>
 <div class="content-primary">
 
 <!-- 컨텍스트 헤딩 (카테고리·태그·검색 진입 시) -->
@@ -313,14 +339,6 @@
 </div><!-- /.content-primary -->
 
 <aside class="site-sidebar" aria-label="사이드바">
-  <section class="sidebar-section">
-    <h2 class="sidebar-title">카테고리</h2>
-    <nav class="sidebar-nav" aria-label="카테고리">
-      <div class="nav-list">
-        [##_category_list_##]
-      </div>
-    </nav>
-  </section>
   <section class="sidebar-section sidebar-status">
     <time class="sidebar-clock" id="current-datetime" datetime="">
       <span class="sidebar-date"></span>
@@ -351,7 +369,7 @@
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <p class="footer-copy">[##_var_footer_text_##]</p>
+    <p class="footer-copy">© <strong><u>mireutale</u></strong>. All rights reserved.</p>
     <a href="[##_rss_url_##]" class="footer-rss" aria-label="RSS 피드">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/></svg>
     </a>
@@ -434,9 +452,6 @@
   });
 
   function setupCategoryToggles() {
-    var nav = document.querySelector('.nav-list');
-    if (!nav) return;
-
     function normalizeLink(link) {
       if (link.querySelector(':scope > .category-name')) return;
 
@@ -458,37 +473,163 @@
       link.insertBefore(name, link.firstChild);
     }
 
-    var rootLink = nav.querySelector('.link_tit');
-    if (rootLink) rootLink.setAttribute('aria-hidden', 'true');
+    document.querySelectorAll('.nav-list').forEach(function(nav) {
+      var rootLink = nav.querySelector('.link_tit');
+      if (rootLink) rootLink.setAttribute('aria-hidden', 'true');
 
-    nav.querySelectorAll('a').forEach(normalizeLink);
+      nav.querySelectorAll('a').forEach(normalizeLink);
 
-    nav.querySelectorAll('.category_list > li').forEach(function(item) {
-      var link = item.querySelector(':scope > a');
-      var subList = item.querySelector(':scope > .sub_category_list');
-      if (!link || !subList || item.querySelector(':scope > .category-row')) return;
+      nav.querySelectorAll('.category_list > li').forEach(function(item) {
+        var link = item.querySelector(':scope > a');
+        var subList = item.querySelector(':scope > .sub_category_list');
+        if (!link || !subList || item.querySelector(':scope > .category-row')) return;
 
-      item.classList.add('has-children');
-      var isSelected = item.classList.contains('selected') || !!item.querySelector('.selected');
-      if (isSelected) item.classList.add('is-open');
+        item.classList.add('has-children');
+        var isSelected = item.classList.contains('selected') || !!item.querySelector('.selected');
+        if (isSelected) item.classList.add('is-open');
 
-      var row = document.createElement('div');
-      row.className = 'category-row';
-      item.insertBefore(row, link);
+        var row = document.createElement('div');
+        row.className = 'category-row';
+        item.insertBefore(row, link);
 
-      var btn = document.createElement('button');
-      btn.className = 'category-toggle';
-      btn.type = 'button';
-      btn.setAttribute('aria-label', link.textContent.replace(/\s+/g, ' ').trim() + ' 하위 분류 보기');
-      btn.setAttribute('aria-expanded', String(item.classList.contains('is-open')));
-      row.appendChild(btn);
-      row.appendChild(link);
+        var btn = document.createElement('button');
+        btn.className = 'category-toggle';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', link.textContent.replace(/\s+/g, ' ').trim() + ' 하위 분류 보기');
+        btn.setAttribute('aria-expanded', String(item.classList.contains('is-open')));
+        row.appendChild(btn);
+        row.appendChild(link);
 
-      btn.addEventListener('click', function() {
-        var open = item.classList.toggle('is-open');
-        btn.setAttribute('aria-expanded', String(open));
+        btn.addEventListener('click', function() {
+          var open = item.classList.toggle('is-open');
+          btn.setAttribute('aria-expanded', String(open));
+        });
       });
     });
+  }
+
+  function setupFolderDrawer() {
+    var toggle = document.getElementById('folder-toggle');
+    var drawer = document.getElementById('folder-drawer');
+    var backdrop = document.getElementById('folder-backdrop');
+    if (!toggle || !drawer || !backdrop) return;
+
+    function setOpen(open) {
+      document.body.classList.toggle('drawer-open', open);
+      drawer.classList.toggle('is-open', open);
+      drawer.setAttribute('aria-hidden', String(!open));
+      toggle.setAttribute('aria-expanded', String(open));
+      backdrop.hidden = !open;
+      if (open) {
+        var firstLink = drawer.querySelector('a, button');
+        if (firstLink) firstLink.focus();
+      } else {
+        toggle.focus();
+      }
+    }
+
+    toggle.addEventListener('click', function() { setOpen(!drawer.classList.contains('is-open')); });
+    backdrop.addEventListener('click', function() { setOpen(false); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) setOpen(false);
+    });
+  }
+
+  function setupFolderPosts() {
+    document.querySelectorAll('[data-folder-posts]').forEach(function(source) {
+      var posts = Array.prototype.slice.call(source.querySelectorAll('.folder-post-item'));
+      var drawer = source.closest('.folder-drawer');
+      var categoryRoot = drawer && drawer.querySelector('.nav-list .category_list');
+      if (!posts.length) {
+        source.innerHTML = '<li class="folder-empty">표시할 최근 글이 없습니다.</li>';
+        source.classList.remove('folder-post-source');
+        source.classList.add('folder-tree');
+        return;
+      }
+
+      var tree = categoryRoot || document.createElement('ul');
+      var roots = buildCategoryMap(tree);
+
+      function getFolder(parent, map, name) {
+        var key = name || '미분류';
+        if (map[key]) return map[key];
+
+        var li = document.createElement('li');
+        li.className = 'folder-node is-open';
+        var button = document.createElement('button');
+        button.className = 'folder-node-toggle';
+        button.type = 'button';
+        button.setAttribute('aria-expanded', 'true');
+        button.textContent = key;
+        var childList = document.createElement('ul');
+        childList.className = 'folder-node-list';
+
+        li.appendChild(button);
+        li.appendChild(childList);
+        parent.appendChild(li);
+
+        var folder = { item: li, list: childList, children: {} };
+        map[key] = folder;
+
+        button.addEventListener('click', function() {
+          var open = li.classList.toggle('is-open');
+          button.setAttribute('aria-expanded', String(open));
+        });
+
+        return folder;
+      }
+
+      posts.forEach(function(post) {
+        var category = post.querySelector('.folder-post-category');
+        var path = ((category && category.textContent) || '미분류').split('/').map(function(part) {
+          return part.trim();
+        }).filter(Boolean);
+        var parent = tree;
+        var map = roots;
+        var folder;
+
+        path.forEach(function(name) {
+          folder = getFolder(parent, map, name);
+          parent = folder.list;
+          map = folder.children;
+        });
+
+        (folder ? folder.list : tree).appendChild(post);
+      });
+
+      source.remove();
+      if (!categoryRoot) {
+        tree.className = 'folder-tree';
+        drawer.querySelector('.folder-section').appendChild(tree);
+      }
+    });
+
+    function getCategoryName(item) {
+      var name = item.querySelector(':scope > .category-row .category-name, :scope > a .category-name, :scope > a');
+      return name ? name.textContent.replace(/\s*\(\d+\)\s*$/, '').replace(/\s+/g, ' ').trim() : '';
+    }
+
+    function getCategoryList(item) {
+      var list = item.querySelector(':scope > .sub_category_list');
+      if (!list) {
+        list = document.createElement('ul');
+        list.className = 'sub_category_list';
+        item.appendChild(list);
+      }
+      return list;
+    }
+
+    function buildCategoryMap(list) {
+      var map = {};
+      Array.prototype.slice.call(list.children).forEach(function(item) {
+        if (!item.matches('li')) return;
+        var name = getCategoryName(item);
+        if (!name) return;
+        var childList = getCategoryList(item);
+        map[name] = { item: item, list: childList, children: buildCategoryMap(childList) };
+      });
+      return map;
+    }
   }
 
   function updateDateTime() {
@@ -519,6 +660,8 @@
 
   updateDateTime();
   setupCategoryToggles();
+  setupFolderDrawer();
+  setupFolderPosts();
   setInterval(updateDateTime, 1000);
   applyTheme(getTheme());
 })();
