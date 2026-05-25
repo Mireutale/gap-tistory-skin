@@ -68,15 +68,6 @@
         [##_category_list_##]
       </div>
     </nav>
-    <ul class="folder-post-source" data-folder-posts>
-      <s_rctps_rep>
-      <li class="folder-post-item">
-        <span class="folder-post-category">[##_rctps_rep_category_##]</span>
-        <a href="[##_rctps_rep_link_##]" class="folder-post-link">[##_rctps_rep_title_##]</a>
-        <time class="folder-post-date">[##_rctps_rep_simple_date_##]</time>
-      </li>
-      </s_rctps_rep>
-    </ul>
   </section>
 </aside>
 <div class="drawer-backdrop" id="folder-backdrop" hidden></div>
@@ -126,7 +117,7 @@
   <s_if_var_show_thumbnails>
   <div class="post-thumb">
     <a href="[##_article_rep_link_##]" tabindex="-1" aria-hidden="true">
-      <img src="//i1.daumcdn.net/thumb/C240x160/?fname=[##_article_rep_thumbnail_raw_url_##]" alt="">
+      <img src="https://i1.daumcdn.net/thumb/C240x160/?fname=[##_article_rep_thumbnail_raw_url_##]" alt="">
     </a>
   </div>
   </s_if_var_show_thumbnails>
@@ -535,103 +526,6 @@
     });
   }
 
-  function setupFolderPosts() {
-    document.querySelectorAll('[data-folder-posts]').forEach(function(source) {
-      var posts = Array.prototype.slice.call(source.querySelectorAll('.folder-post-item'));
-      var drawer = source.closest('.folder-drawer');
-      var categoryRoot = drawer && drawer.querySelector('.nav-list .category_list');
-      if (!posts.length) {
-        source.innerHTML = '<li class="folder-empty">표시할 최근 글이 없습니다.</li>';
-        source.classList.remove('folder-post-source');
-        source.classList.add('folder-tree');
-        return;
-      }
-
-      var tree = categoryRoot || document.createElement('ul');
-      var roots = buildCategoryMap(tree);
-
-      function getFolder(parent, map, name) {
-        var key = name || '미분류';
-        if (map[key]) return map[key];
-
-        var li = document.createElement('li');
-        li.className = 'folder-node is-open';
-        var button = document.createElement('button');
-        button.className = 'folder-node-toggle';
-        button.type = 'button';
-        button.setAttribute('aria-expanded', 'true');
-        button.textContent = key;
-        var childList = document.createElement('ul');
-        childList.className = 'folder-node-list';
-
-        li.appendChild(button);
-        li.appendChild(childList);
-        parent.appendChild(li);
-
-        var folder = { item: li, list: childList, children: {} };
-        map[key] = folder;
-
-        button.addEventListener('click', function() {
-          var open = li.classList.toggle('is-open');
-          button.setAttribute('aria-expanded', String(open));
-        });
-
-        return folder;
-      }
-
-      posts.forEach(function(post) {
-        var category = post.querySelector('.folder-post-category');
-        var path = ((category && category.textContent) || '미분류').split('/').map(function(part) {
-          return part.trim();
-        }).filter(Boolean);
-        var parent = tree;
-        var map = roots;
-        var folder;
-
-        path.forEach(function(name) {
-          folder = getFolder(parent, map, name);
-          parent = folder.list;
-          map = folder.children;
-        });
-
-        (folder ? folder.list : tree).appendChild(post);
-      });
-
-      source.remove();
-      if (!categoryRoot) {
-        tree.className = 'folder-tree';
-        drawer.querySelector('.folder-section').appendChild(tree);
-      }
-    });
-
-    function getCategoryName(item) {
-      var name = item.querySelector(':scope > .category-row .category-name, :scope > a .category-name, :scope > a');
-      return name ? name.textContent.replace(/\s*\(\d+\)\s*$/, '').replace(/\s+/g, ' ').trim() : '';
-    }
-
-    function getCategoryList(item) {
-      var list = item.querySelector(':scope > .sub_category_list');
-      if (!list) {
-        list = document.createElement('ul');
-        list.className = 'sub_category_list';
-        item.appendChild(list);
-      }
-      return list;
-    }
-
-    function buildCategoryMap(list) {
-      var map = {};
-      Array.prototype.slice.call(list.children).forEach(function(item) {
-        if (!item.matches('li')) return;
-        var name = getCategoryName(item);
-        if (!name) return;
-        var childList = getCategoryList(item);
-        map[name] = { item: item, list: childList, children: buildCategoryMap(childList) };
-      });
-      return map;
-    }
-  }
-
   function updateDateTime() {
     var el = document.getElementById('current-datetime');
     if (!el) return;
@@ -661,7 +555,6 @@
   updateDateTime();
   setupCategoryToggles();
   setupFolderDrawer();
-  setupFolderPosts();
   setInterval(updateDateTime, 1000);
   applyTheme(getTheme());
 })();
