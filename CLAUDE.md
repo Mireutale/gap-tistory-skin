@@ -33,6 +33,9 @@
   rm -f gap-tistory-skin.zip && cd skin_data && zip -r ../gap-tistory-skin.zip skin.html style.css index.xml preview256.jpg && cd ..
   ```
 
+### README 업데이트
+- 릴리스 또는 사용자에게 보이는 동작/레이아웃 변경이 있으면 `README.md`의 버전 히스토리에 변경 내용을 추가한다.
+
 ### PR & 릴리스 워크플로
 
 기본 브랜치는 `main`과 `dev`만 유지한다. 모든 작업은 `dev`에서 분기한 작업 브랜치에서 진행하고, `main`에는 사용자의 명시적인 허락을 받은 뒤에만 `dev`를 반영한다.
