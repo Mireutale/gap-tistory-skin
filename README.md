@@ -41,6 +41,14 @@ Lovable 영감의 크림/차콜 팔레트 기반 에디토리얼 티스토리 �
 ## 버전 히스토리
 
 <details open>
+<summary>v1.4.2</summary>
+
+- 푸터 내부 컨테이너 폭 제한을 해제해 저작권/RSS 영역이 화면 끝까지 배치되도록 개선
+- 스킨 메타데이터 버전을 `1.4.2`로 갱신
+
+</details>
+
+<details>
 <summary>v1.4.0</summary>
 
 - 왼쪽 고정 카테고리 패널 추가
