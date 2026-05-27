@@ -110,7 +110,9 @@
     </div>
     <div class="post-meta">
       <time class="post-date">[##_article_rep_simple_date_##]</time>
+      <s_rp_count>
       <span class="post-comment-cnt">댓글 [##_article_rep_rp_cnt_##]</span>
+      </s_rp_count>
     </div>
   </div>
   <s_article_rep_thumbnail>
@@ -135,7 +137,6 @@
     <h1 class="article-title" itemprop="name">[##_article_rep_title_##]</h1>
     <div class="article-meta">
       <time class="post-date" itemprop="datePublished">[##_article_rep_date_##]</time>
-      <span class="article-views">조회 [##_article_rep_visit_##]</span>
       <span class="article-comments">댓글 [##_article_rep_rp_cnt_##]</span>
     </div>
   </header>
@@ -167,57 +168,65 @@
 </article>
 
 <!-- 댓글 -->
-<s_rp_container>
+<s_rp>
 <section class="comments" id="comments">
-  <h2 class="comments-heading">댓글 <span>[##_rp_count_##]</span></h2>
+  <h2 class="comments-heading">댓글 <span>[##_article_rep_rp_cnt_##]</span></h2>
 
+  <s_rp_container>
   <s_rp_rep>
   <div class="comment-list">
     <s_rp_rep_item>
     <article class="comment-item" id="comment-[##_rp_rep_id_##]">
       <div class="comment-header">
-        <div class="comment-avatar" aria-hidden="true">[##_rp_rep_name_##]</div>
+        <div class="comment-avatar" data-avatar-name="[##_rp_rep_name_##]" aria-hidden="true"></div>
         <div class="comment-info">
           <strong class="comment-author">[##_rp_rep_name_##]</strong>
           <time class="comment-date">[##_rp_rep_date_##]</time>
         </div>
         <s_rp_rep_delete>
-        <a href="[##_rp_rep_delete_##]" class="comment-delete">삭제</a>
+        <a href="#" onclick="[##_rp_rep_onclick_delete_##]" class="comment-delete">삭제</a>
         </s_rp_rep_delete>
       </div>
       <div class="comment-body">[##_rp_rep_desc_##]</div>
-      <s_rp_rep_sub>
-      <div class="comment-replies">
-        <s_rp_rep_sub_item>
-        <article class="comment-item comment-reply">
-          <div class="comment-header">
-            <div class="comment-avatar" aria-hidden="true">[##_rp_rep_sub_name_##]</div>
-            <div class="comment-info">
-              <strong class="comment-author">[##_rp_rep_sub_name_##]</strong>
-              <time class="comment-date">[##_rp_rep_sub_date_##]</time>
-            </div>
-            <s_rp_rep_sub_delete>
-            <a href="[##_rp_rep_sub_delete_##]" class="comment-delete">삭제</a>
-            </s_rp_rep_sub_delete>
-          </div>
-          <div class="comment-body">[##_rp_rep_sub_desc_##]</div>
-        </article>
-        </s_rp_rep_sub_item>
-      </div>
-      </s_rp_rep_sub>
     </article>
     </s_rp_rep_item>
   </div>
   </s_rp_rep>
+  </s_rp_container>
 
   <s_rp_input_form>
   <div class="comment-form-wrap">
     <h3 class="comment-form-title">댓글 작성</h3>
-    [##_rp_input_form_##]
+    <div class="comment-form">
+      <s_rp_member>
+      <s_rp_guest>
+      <div class="comment-form-fields">
+        <label>
+          <span>이름</span>
+          <input type="text" name="[##_rp_input_name_##]" value="[##_guest_name_##]" placeholder="이름">
+        </label>
+        <label>
+          <span>비밀번호</span>
+          <input type="password" name="[##_rp_input_password_##]" value="[##_rp_admin_check_##]" placeholder="비밀번호">
+        </label>
+        <label>
+          <span>홈페이지</span>
+          <input type="text" name="[##_rp_input_homepage_##]" value="[##_guest_homepage_##]" placeholder="홈페이지">
+        </label>
+      </div>
+      </s_rp_guest>
+      <label class="comment-secret">
+        <input type="checkbox" name="[##_rp_input_is_secret_##]">
+        <span>비밀글</span>
+      </label>
+      </s_rp_member>
+      <textarea name="[##_rp_input_comment_##]" rows="5" placeholder="댓글을 입력하세요"></textarea>
+      <button type="submit" onclick="[##_rp_onclick_submit_##]">댓글 달기</button>
+    </div>
   </div>
   </s_rp_input_form>
 </section>
-</s_rp_container>
+</s_rp>
 
 </s_permalink_article_rep>
 </s_article_rep>
@@ -289,7 +298,7 @@
           <time class="comment-date">[##_guest_rep_date_##]</time>
         </div>
         <s_guest_rep_delete>
-        <a href="[##_guest_rep_delete_##]" class="comment-delete">삭제</a>
+        <a href="#" onclick="[##_guest_rep_onclick_delete_##]" class="comment-delete">삭제</a>
         </s_guest_rep_delete>
       </div>
       <div class="comment-body">[##_guest_rep_desc_##]</div>
@@ -424,8 +433,17 @@
   });
 
   document.querySelectorAll('.comment-avatar').forEach(function(el) {
-    var t = (el.textContent || '').trim();
+    var t = (el.dataset.avatarName || el.textContent || '').trim();
     el.textContent = t ? t.charAt(0).toUpperCase() : '?';
+  });
+
+  document.querySelectorAll('.comment-body').forEach(function(el) {
+    var marker = '[비밀댓글]';
+    var html = el.innerHTML.trim();
+    if (html.indexOf(marker) !== 0) return;
+    var rest = html.slice(marker.length).trim();
+    el.innerHTML = '<div class="comment-secret-label">' + marker + '</div>' +
+      (rest ? '<div>' + rest + '</div>' : '');
   });
 
   document.querySelectorAll('.context-heading').forEach(function(el) {
