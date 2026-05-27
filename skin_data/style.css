@@ -608,7 +608,7 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
   color: var(--color-text); margin: var(--sp-3) 0 var(--sp-4);
 }
 .article-meta { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
-.article-views, .article-comments { font-size: var(--text-small); color: var(--color-text-muted); }
+.article-comments { font-size: var(--text-small); color: var(--color-text-muted); }
 
 .article-body { color: var(--color-text-body); font-size: var(--text-body); line-height: 1.75; }
 .article-body h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.4px; color: var(--color-text); margin: var(--sp-7) 0 var(--sp-3); }
@@ -648,6 +648,7 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
 }
 .article-body pre code { background: none; border: none; padding: 0; font-size: 0.875rem; line-height: 1.65; }
 .article-body .hljs { background: var(--color-hover-bg) !important; color: var(--color-text) !important; }
+.tt_box_namecard { display: none !important; }
 
 .article-body figure { margin: var(--sp-5) 0; }
 .article-body figure img { margin: 0 auto; }
@@ -687,9 +688,24 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
 .comment-date { font-size: 12px; color: var(--color-text-muted); }
 .comment-delete { font-size: 12px; color: var(--color-text-muted); text-decoration: underline; margin-left: auto; }
 .comment-body { font-size: var(--text-body); color: var(--color-text-body); line-height: 1.6; }
+.comment-secret-label {
+  display: block;
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
 
 .comment-form-wrap { margin-top: var(--sp-6); padding-top: var(--sp-5); border-top: 1px solid var(--color-border-soft); }
 .comment-form-title { font-size: var(--text-card); font-weight: 600; color: var(--color-text); margin-bottom: var(--sp-4); }
+.comment-form-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-2); }
+.comment-form-fields label { display: block; }
+.comment-form-fields span {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
 .comment-form-wrap input, .comment-form-wrap textarea {
   width: 100%; font-family: var(--font-sans); font-size: var(--text-body);
   background: var(--color-bg); color: var(--color-text);
@@ -700,6 +716,53 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
 .comment-form-wrap input::placeholder, .comment-form-wrap textarea::placeholder { color: var(--color-text-muted); }
 .comment-form-wrap input:focus, .comment-form-wrap textarea:focus { border-color: var(--color-border-interactive); box-shadow: var(--shadow-focus); }
 .comment-form-wrap textarea { min-height: 100px; resize: vertical; }
+.comment-secret {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  margin-bottom: var(--sp-3);
+  cursor: pointer;
+  user-select: none;
+}
+.comment-secret input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+.comment-secret span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--r-pill);
+  transition: border-color var(--dur-fast), background var(--dur-fast), color var(--dur-fast);
+}
+.comment-secret span::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 1px solid currentColor;
+  border-radius: var(--r-pill);
+}
+.comment-secret input:checked + span {
+  color: var(--color-text);
+  background: var(--color-hover-bg);
+  border-color: var(--color-border-interactive);
+}
+.comment-secret input:checked + span::before {
+  background: currentColor;
+  box-shadow: inset 0 0 0 3px var(--color-bg);
+}
+.comment-secret input:focus-visible + span {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-ring);
+}
 .comment-form-wrap button[type="submit"] {
   display: inline-flex; align-items: center; gap: var(--sp-1);
   background: var(--color-text); color: var(--color-text-on-dark);
@@ -806,6 +869,7 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
     color: var(--color-text-muted);
     font-size: 13px;
   }
+  .comment-form-fields { grid-template-columns: 1fr; }
   .article-nav { grid-template-columns: 1fr; }
   .article-nav-next { text-align: left; }
   .post-thumb { width: 90px; height: 64px; }
