@@ -452,6 +452,25 @@
     if (!text || text === '"" 검색 결과') el.remove();
   });
 
+  function normalizeArticleLink(link) {
+    var rawHref = link.getAttribute('href') || '';
+    var rawText = link.textContent || '';
+    var markdownTailMatch = (rawHref + ' ' + rawText).match(/(?:\]|%5D)\((https?:\/\/[^)\s]+)\)/i);
+    var urlMatch = markdownTailMatch || rawHref.match(/^https?:\/\/\S+$/) || rawText.match(/https?:\/\/\S+/);
+    if (!urlMatch) return;
+
+    var url = markdownTailMatch ? markdownTailMatch[1] : urlMatch[0];
+    if (!markdownTailMatch) {
+      while ((url.match(/\)/g) || []).length > (url.match(/\(/g) || []).length && url.slice(-1) === ')') {
+        url = url.slice(0, -1);
+      }
+    }
+
+    if (url && url !== rawHref) link.setAttribute('href', url);
+  }
+
+  document.querySelectorAll('.article-body a, .post-summary a').forEach(normalizeArticleLink);
+
   document.querySelectorAll('.list-pagination').forEach(function(el) {
     var hasControls = el.querySelector('a[href], strong');
     if (!hasControls) el.remove();
