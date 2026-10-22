@@ -479,10 +479,15 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
 }
 
 .post-item {
+  position: relative;
   display: flex; align-items: flex-start; justify-content: space-between;
-  gap: var(--sp-4); padding: var(--sp-6) 0;
+  gap: var(--sp-4); padding: var(--sp-6) var(--sp-3);
   border-bottom: 1px solid var(--color-border-soft);
+  border-radius: var(--r-card);
+  transition: background-color var(--dur-fast);
 }
+.post-item:hover,
+.post-item:focus-within { background: var(--color-hover-bg); }
 .post-item:last-child { border-bottom: none; }
 .post-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
 
@@ -490,10 +495,20 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
   font-size: var(--text-card); font-weight: 600;
   letter-spacing: -0.3px; line-height: 1.3; color: var(--color-text);
 }
-.post-title a { color: inherit; transition: opacity var(--dur-fast); }
-.post-title a:hover { opacity: 0.7; }
+.post-title a { color: inherit; }
+.post-title a::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  border-radius: var(--r-card);
+}
+.post-title a:focus-visible { outline: none; }
+.post-title a:focus-visible::after {
+  outline: 2px solid var(--color-border-interactive);
+  outline-offset: -2px;
+}
 
 .post-summary {
+  position: relative; z-index: 0;
   display: -webkit-box;
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
@@ -580,7 +595,8 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
   border: 1px solid var(--color-border-soft); border-radius: var(--r-card); overflow: hidden;
 }
 .post-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-normal) var(--ease-out); }
-.post-thumb:hover img { transform: scale(1.04); }
+.post-item:hover .post-thumb img,
+.post-item:focus-within .post-thumb img { transform: scale(1.04); }
 
 /* ---- 9. PAGINATION ---- */
 .pagination { display: flex; align-items: center; justify-content: center; gap: var(--sp-1); margin-top: var(--sp-7); }
@@ -879,7 +895,7 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
   .post-thumb { width: 72px; height: 54px; border-radius: var(--r-comf); }
   .container { padding: 0 var(--sp-3); }
   .header-inner { gap: var(--sp-2); }
-  .post-item { padding: var(--sp-5) 0; }
+  .post-item { padding: var(--sp-5) var(--sp-2); }
   .site-main { padding: var(--sp-6) 0; }
   .footer-inner { flex-direction: column; text-align: center; }
 }
