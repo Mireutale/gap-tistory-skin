@@ -10,6 +10,7 @@
   var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
   if(t==='dark'||(t==='auto'&&mq))document.documentElement.dataset.theme='dark';
   else if(t==='light')document.documentElement.dataset.theme='light';
+  if(localStorage.getItem('gap-list-view')==='compact')document.documentElement.dataset.listView='compact';
 })();
 </script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
@@ -82,15 +83,40 @@
 
 <!-- 검색 결과 헤더 -->
 <s_search>
-<div class="context-heading">
+<div class="context-heading" data-search-query="[##_search_text_##]">
   <h1 class="context-title">"[##_search_text_##]" 검색 결과</h1>
 </div>
 </s_search>
+
+<!-- 제목 목록 (카테고리·태그·검색) -->
+<s_list>
+<section class="title-list" aria-labelledby="title-list-heading">
+  <h2 class="title-list-heading" id="title-list-heading">글 목록 <span class="title-list-count">[##_list_count_##]</span></h2>
+  <ol class="title-list-items">
+    <s_list_rep>
+    <li>
+      <a href="[##_list_rep_link_##]">
+        <span class="title-list-title">[##_list_rep_title_text_##]</span>
+        <span class="title-list-cnt">[##_list_rep_rp_cnt_##]</span>
+        <time class="title-list-date">[##_list_rep_regdate_##]</time>
+      </a>
+    </li>
+    </s_list_rep>
+  </ol>
+</section>
+<s_list_empty>
+<p class="empty-list">표시할 글이 없습니다.</p>
+</s_list_empty>
+</s_list>
 
 <!-- ===== 글 목록 / 상세 ===== -->
 <s_index>
 <div class="main-list-heading">
   <h1 class="context-title">[##_list_conform_##]</h1>
+  <div class="view-toggle" role="group" aria-label="목록 보기 방식">
+    <button type="button" data-view="card" aria-pressed="true">카드</button>
+    <button type="button" data-view="compact" aria-pressed="false">리스트</button>
+  </div>
 </div>
 <div class="post-list">
 </s_index>
@@ -99,9 +125,6 @@
 <s_index_article_rep>
 <article class="post-item">
   <div class="post-item-body">
-    <s_article_rep_category>
-    <span class="post-category">[##_article_rep_category_##]</span>
-    </s_article_rep_category>
     <h2 class="post-title">
       <a href="[##_article_rep_link_##]">[##_article_rep_title_##]</a>
     </h2>
@@ -232,12 +255,6 @@
 <s_index>
 </div>
 </s_index>
-
-<s_list>
-<s_list_empty>
-<p class="empty-list">표시할 글이 없습니다.</p>
-</s_list_empty>
-</s_list>
 
 <s_paging>
 <nav class="pagination list-pagination" aria-label="글 목록 페이지 탐색">
@@ -587,7 +604,62 @@
     }
   }
 
+  function setupViewToggle() {
+    var buttons = document.querySelectorAll('.view-toggle button');
+    function applyView(view) {
+      if (view === 'compact') root.dataset.listView = 'compact';
+      else delete root.dataset.listView;
+      buttons.forEach(function(b) { b.setAttribute('aria-pressed', String(b.dataset.view === view)); });
+    }
+    buttons.forEach(function(b) {
+      b.addEventListener('click', function() {
+        localStorage.setItem('gap-list-view', b.dataset.view);
+        applyView(b.dataset.view);
+      });
+    });
+    applyView(root.dataset.listView === 'compact' ? 'compact' : 'card');
+  }
+
+  function normalizeTitleListCounts() {
+    document.querySelectorAll('.title-list-cnt').forEach(function(el) {
+      var n = parseInt((el.textContent.match(/\d+/) || ['0'])[0], 10);
+      el.textContent = n > 0 ? '댓글 ' + n : '';
+    });
+  }
+
+  function highlightSearchQuery() {
+    var heading = document.querySelector('[data-search-query]');
+    var q = heading ? heading.dataset.searchQuery.trim() : '';
+    if (!q) return;
+    var ql = q.toLowerCase();
+    document.querySelectorAll('.post-title a, .post-summary, .title-list-title').forEach(function(scope) {
+      var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function(node) {
+        var text = node.textContent;
+        var lower = text.toLowerCase();
+        if (lower.indexOf(ql) === -1) return;
+        var frag = document.createDocumentFragment();
+        var i = 0, hit;
+        while ((hit = lower.indexOf(ql, i)) !== -1) {
+          frag.appendChild(document.createTextNode(text.slice(i, hit)));
+          var mark = document.createElement('mark');
+          mark.className = 'search-hit';
+          mark.textContent = text.slice(hit, hit + q.length);
+          frag.appendChild(mark);
+          i = hit + q.length;
+        }
+        frag.appendChild(document.createTextNode(text.slice(i)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    });
+  }
+
   updateDateTime();
+  setupViewToggle();
+  normalizeTitleListCounts();
+  highlightSearchQuery();
   setupCategoryToggles();
   setupFolderDrawer();
   setInterval(updateDateTime, 1000);
