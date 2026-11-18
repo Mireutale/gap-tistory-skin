@@ -467,7 +467,10 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
 
 /* ---- 8. POST LIST ---- */
 .main-list-heading {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
   padding-bottom: var(--sp-4);
   border-bottom: 1px solid var(--color-border-soft);
 }
@@ -475,56 +478,98 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
 
 .view-toggle {
   flex-shrink: 0;
-  display: inline-flex; gap: 2px; padding: 2px;
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
   border: 1px solid var(--color-border-soft);
   border-radius: var(--r-pill);
 }
+
 .view-toggle button {
-  font-family: var(--font-sans); font-size: var(--text-small);
+  font-family: var(--font-sans);
+  font-size: var(--text-small);
   padding: 4px 14px;
   border-radius: var(--r-pill);
   color: var(--color-text-muted);
   background: transparent;
   transition: background var(--dur-fast), color var(--dur-fast);
 }
+
 .view-toggle button:hover { color: var(--color-text); }
-.view-toggle button[aria-pressed="true"] { background: var(--color-text); color: var(--color-text-on-dark); }
-.view-toggle button:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-ring); }
+
+.view-toggle button[aria-pressed="true"] {
+  background: var(--color-text);
+  color: var(--color-text-on-dark);
+}
+
+.view-toggle button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-ring);
+}
 
 /* 리스트 보기: 요약·썸네일·댓글 수를 숨기고 제목 + 날짜만 한 줄로 */
-[data-list-view="compact"] .post-item { align-items: center; padding: var(--sp-2) var(--sp-3); }
-[data-list-view="compact"] .post-item-body { flex-direction: row; align-items: baseline; gap: var(--sp-3); }
+[data-list-view="compact"] .post-item {
+  align-items: center;
+  padding: var(--sp-2) var(--sp-3);
+}
+
+[data-list-view="compact"] .post-item-body {
+  flex-direction: row;
+  align-items: baseline;
+  gap: var(--sp-3);
+}
+
 [data-list-view="compact"] .post-summary,
 [data-list-view="compact"] .post-thumb,
 [data-list-view="compact"] .post-comment-cnt { display: none; }
+
 [data-list-view="compact"] .post-title {
-  flex: 1; min-width: 0;
-  font-size: var(--text-body); font-weight: 500;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-body);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 [data-list-view="compact"] .post-meta { flex-shrink: 0; }
 
 /* 제목 목록 (s_list_rep) — subgrid로 댓글 수 유무와 관계없이 날짜 열 정렬 */
 .title-list { margin-bottom: var(--sp-6); }
+
 .title-list-heading {
-  display: flex; align-items: baseline; gap: var(--sp-1);
-  font-size: var(--text-body); font-weight: 600; color: var(--color-text);
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-1);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
   padding-bottom: var(--sp-2);
   border-bottom: 1px solid var(--color-border-soft);
 }
-.title-list-count { font-size: var(--text-small); font-weight: 400; color: var(--color-text-muted); }
+
+.title-list-count {
+  font-size: var(--text-small);
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
 .title-list-items {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
   column-gap: var(--sp-3);
 }
+
 .title-list-items li,
 .title-list-items a {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
 }
+
 .title-list-items li { border-bottom: 1px solid var(--color-border-soft); }
+
 .title-list-items a {
   align-items: baseline;
   padding: 10px var(--sp-2);
@@ -532,21 +577,34 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
   border-radius: var(--r-std);
   transition: background var(--dur-fast);
 }
+
 .title-list-items a:hover,
-.title-list-items a:focus-visible { background: var(--color-hover-bg); outline: none; }
-.title-list-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.title-list-items a:focus-visible {
+  background: var(--color-hover-bg);
+  outline: none;
+}
+
+.title-list-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .title-list-cnt,
 .title-list-date {
-  font-size: var(--text-small); color: var(--color-text-muted);
-  font-variant-numeric: tabular-nums; text-align: right;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 mark.search-hit {
-  background: rgba(250, 204, 21, 0.35);
+  background: rgb(250 204 21 / 35%);
   color: inherit;
   border-radius: 2px;
   padding: 0 1px;
 }
+
 .post-list { display: flex; flex-direction: column; }
 .empty-list {
   padding: var(--sp-6) 0;
