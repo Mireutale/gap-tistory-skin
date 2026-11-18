@@ -88,6 +88,14 @@
 </div>
 </s_search>
 
+<!-- 보기 전환 버튼: 목록 페이지에서 스크립트가 첫 글 위에 삽입 -->
+<template id="view-toggle-tpl">
+<div class="view-toggle" role="group" aria-label="목록 보기 방식">
+  <button type="button" data-view="card" aria-pressed="true" aria-label="글 내용 보기" title="글 내용 보기"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></button>
+  <button type="button" data-view="compact" aria-pressed="false" aria-label="목록 보기" title="목록 보기"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg></button>
+</div>
+</template>
+
 <s_list>
 <s_list_empty>
 <p class="empty-list">표시할 글이 없습니다.</p>
@@ -98,10 +106,6 @@
 <s_index>
 <div class="main-list-heading">
   <h1 class="context-title">[##_list_conform_##]</h1>
-  <div class="view-toggle" role="group" aria-label="목록 보기 방식">
-    <button type="button" data-view="card" aria-pressed="true" aria-label="글 내용 보기" title="글 내용 보기"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></button>
-    <button type="button" data-view="compact" aria-pressed="false" aria-label="목록 보기" title="목록 보기"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg></button>
-  </div>
 </div>
 <div class="post-list">
 </s_index>
@@ -586,7 +590,20 @@
   }
 
   function setupViewToggle() {
-    var buttons = document.querySelectorAll('.view-toggle button');
+    var tpl = document.getElementById('view-toggle-tpl');
+    var firstPost = document.querySelector('.post-item');
+    if (!tpl || !firstPost) return;
+    var toggle = tpl.content.firstElementChild.cloneNode(true);
+    var heading = document.querySelector('.main-list-heading');
+    if (heading) {
+      heading.appendChild(toggle);
+    } else {
+      var bar = document.createElement('div');
+      bar.className = 'list-toolbar';
+      bar.appendChild(toggle);
+      firstPost.parentNode.insertBefore(bar, firstPost);
+    }
+    var buttons = toggle.querySelectorAll('button');
     function applyView(view) {
       if (view === 'compact') root.dataset.listView = 'compact';
       else delete root.dataset.listView;

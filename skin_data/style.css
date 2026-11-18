@@ -382,6 +382,7 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
   min-width: 0;
   font-family: var(--font-sans);
   font-size: var(--text-small);
+  line-height: inherit;
   text-align: left;
   color: var(--color-text-muted);
   padding: var(--sp-1) var(--sp-2);
@@ -472,6 +473,13 @@ button { cursor: pointer; background: none; border: none; font-family: inherit; 
   border-bottom: 1px solid var(--color-border-soft);
 }
 .main-list-heading .context-title { margin-bottom: 0; }
+
+.list-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--color-border-soft);
+}
 
 .view-toggle {
   flex-shrink: 0;
