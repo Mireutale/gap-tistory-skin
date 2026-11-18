@@ -16,6 +16,9 @@
     <comment></comment>
     <trackback></trackback>
     <searchEntry></searchEntry>
+    <entriesOnPage>10</entriesOnPage>
+    <entriesOnList>10</entriesOnList>
+    <showListOnCategory>1</showListOnCategory>
     <paging>
       <visible>true</visible>
       <newer>이전</newer>
