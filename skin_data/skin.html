@@ -88,22 +88,15 @@
 </div>
 </s_search>
 
-<!-- 제목 목록 (카테고리·태그·검색) -->
+<!-- 보기 전환 버튼: 목록 페이지에서 스크립트가 첫 글 위에 삽입 -->
+<template id="view-toggle-tpl">
+<div class="view-toggle" role="group" aria-label="목록 보기 방식">
+  <button type="button" data-view="card" aria-pressed="true" aria-label="글 내용 보기" title="글 내용 보기"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></button>
+  <button type="button" data-view="compact" aria-pressed="false" aria-label="목록 보기" title="목록 보기"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg></button>
+</div>
+</template>
+
 <s_list>
-<section class="title-list" aria-labelledby="title-list-heading">
-  <h2 class="title-list-heading" id="title-list-heading">글 목록 <span class="title-list-count">[##_list_count_##]</span></h2>
-  <ol class="title-list-items">
-    <s_list_rep>
-    <li>
-      <a href="[##_list_rep_link_##]">
-        <span class="title-list-title">[##_list_rep_title_text_##]</span>
-        <span class="title-list-cnt">[##_list_rep_rp_cnt_##]</span>
-        <time class="title-list-date">[##_list_rep_regdate_##]</time>
-      </a>
-    </li>
-    </s_list_rep>
-  </ol>
-</section>
 <s_list_empty>
 <p class="empty-list">표시할 글이 없습니다.</p>
 </s_list_empty>
@@ -113,10 +106,6 @@
 <s_index>
 <div class="main-list-heading">
   <h1 class="context-title">[##_list_conform_##]</h1>
-  <div class="view-toggle" role="group" aria-label="목록 보기 방식">
-    <button type="button" data-view="card" aria-pressed="true">카드</button>
-    <button type="button" data-view="compact" aria-pressed="false">리스트</button>
-  </div>
 </div>
 <div class="post-list">
 </s_index>
@@ -525,23 +514,19 @@
       nav.querySelectorAll('.category_list > li').forEach(function(item) {
         var link = item.querySelector(':scope > a');
         var subList = item.querySelector(':scope > .sub_category_list');
-        if (!link || !subList || item.querySelector(':scope > .category-row')) return;
+        if (!link || !subList || item.querySelector(':scope > .category-toggle')) return;
 
         item.classList.add('has-children');
         var isSelected = item.classList.contains('selected') || !!item.querySelector('.selected');
         if (isSelected) item.classList.add('is-open');
 
-        var row = document.createElement('div');
-        row.className = 'category-row';
-        item.insertBefore(row, link);
-
+        // 하위 분류가 있으면 상위 링크 대신 화살표+이름 전체를 폴더 토글 버튼으로 사용
         var btn = document.createElement('button');
         btn.className = 'category-toggle';
         btn.type = 'button';
-        btn.setAttribute('aria-label', link.textContent.replace(/\s+/g, ' ').trim() + ' 하위 분류 보기');
         btn.setAttribute('aria-expanded', String(item.classList.contains('is-open')));
-        row.appendChild(btn);
-        row.appendChild(link);
+        while (link.firstChild) btn.appendChild(link.firstChild);
+        item.replaceChild(btn, link);
 
         btn.addEventListener('click', function() {
           var open = item.classList.toggle('is-open');
@@ -605,7 +590,20 @@
   }
 
   function setupViewToggle() {
-    var buttons = document.querySelectorAll('.view-toggle button');
+    var tpl = document.getElementById('view-toggle-tpl');
+    var firstPost = document.querySelector('.post-item');
+    if (!tpl || !firstPost) return;
+    var toggle = tpl.content.firstElementChild.cloneNode(true);
+    var heading = document.querySelector('.main-list-heading');
+    if (heading) {
+      heading.appendChild(toggle);
+    } else {
+      var bar = document.createElement('div');
+      bar.className = 'list-toolbar';
+      bar.appendChild(toggle);
+      firstPost.parentNode.insertBefore(bar, firstPost);
+    }
+    var buttons = toggle.querySelectorAll('button');
     function applyView(view) {
       if (view === 'compact') root.dataset.listView = 'compact';
       else delete root.dataset.listView;
@@ -620,19 +618,12 @@
     applyView(root.dataset.listView === 'compact' ? 'compact' : 'card');
   }
 
-  function normalizeTitleListCounts() {
-    document.querySelectorAll('.title-list-cnt').forEach(function(el) {
-      var n = parseInt((el.textContent.match(/\d+/) || ['0'])[0], 10);
-      el.textContent = n > 0 ? '댓글 ' + n : '';
-    });
-  }
-
   function highlightSearchQuery() {
     var heading = document.querySelector('[data-search-query]');
     var q = heading ? heading.dataset.searchQuery.trim() : '';
     if (!q) return;
     var ql = q.toLowerCase();
-    document.querySelectorAll('.post-title a, .post-summary, .title-list-title').forEach(function(scope) {
+    document.querySelectorAll('.post-title a, .post-summary').forEach(function(scope) {
       var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
       var nodes = [];
       while (walker.nextNode()) nodes.push(walker.currentNode);
@@ -658,7 +649,6 @@
 
   updateDateTime();
   setupViewToggle();
-  normalizeTitleListCounts();
   highlightSearchQuery();
   setupCategoryToggles();
   setupFolderDrawer();
